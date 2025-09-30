@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>XIRA LCA Dashboard Overview</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
+    <style>
+        /* Custom Pastel Blue Header */
+        .pastel-blue-header {
+            background-color: #8CB9DE; /* Soft, light blue */
+        }
+        
+        :root {
+            --color-primary-blue: #3b82f6; /* Blue-500 */
+            --color-accent-green: #10b981; /* Emerald-500 */
+            --color-accent-purple: #9333ea; /* Violet-600 for AI progress */
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6;
+        }
+        /* Custom style for the floating AI assistant button */
+        .ai-float-button {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .ai-float-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 20px rgba(59, 130, 246, 0.5); /* Blue shadow on hover */
+        }
+        /* Style for mock pie chart to use SVG instead of image */
+        .pie-chart-mock {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: conic-gradient(
+                #10b981 0% 78%,    /* 78% Circularity Index - Green */
+                #f59e0b 78% 100%   /* 22% Gap - Amber */
+            );
+            transform: rotate(-90deg);
+        }
+        /* Hotspot Map Styling Cleanup */
+        .hotspot-grid {
+            /* Still use 12 columns as the base for flexible sub-dividing */
+            display: grid;
+            grid-template-columns: repeat(12, minmax(0, 1fr));
+            gap: 2px; /* Reduced gap to shrink it */
+            padding: 4px 0 8px 0; /* Reduced padding */
+            border-left: 2px solid #e5e7eb; /* Axis line */
+        }
+        .hotspot-cell {
+            height: 12px; /* Smaller cells to shrink it */
+            width: 100%;
+            border-radius: 3px;
+            box-shadow: inset 0 0 1px rgba(0,0,0,0.1);
+        }
+        .hotspot-label {
+             writing-mode: vertical-rl;
+             transform: rotate(180deg);
+             font-size: 0.65rem;
+             color: #6b7280;
+             font-weight: 500;
+             text-align: center;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+    <!-- Top Navigation Bar (Pastel Blue - Thinner) -->
+    <header class="pastel-blue-header text-gray-800 shadow-lg z-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-12"> <!-- Reduced height h-12 -->
+                <!-- Logo (Reduced Size) -->
+                <div class="flex items-center">
+                    <span class="text-2xl font-black tracking-tight text-white">XIRA</span> <!-- Reduced font size to text-2xl -->
+                </div>
+
+                <!-- Tabs -->
+                <nav class="flex space-x-4">
+                    <a href="#" class="px-3 py-2 text-sm font-medium border-b-2 border-white text-white">Overview</a>
+                    <a href="#" class="px-3 py-2 text-sm font-medium text-gray-700 hover:border-b-2 hover:border-white">Process Flow</a>
+                    <a href="#" class="px-3 py-2 text-sm font-medium text-gray-700 hover:border-b-2 hover:border-white">Reports</a>
+                    <a href="#" class="px-3 py-2 text-sm font-medium text-gray-700 hover:border-b-2 hover:border-white">Data Sources</a>
+                    <a href="#" class="px-3 py-2 text-sm font-medium text-gray-700 hover:border-b-2 hover:border-white">Settings</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+    
+    <!-- NEW: Top Sync Badge -->
+    <div class="bg-yellow-100 text-yellow-800 text-xs font-semibold py-1.5 px-4 text-center">
+        Real-time data sync from **MINE SITE-3** in progress....
+        <span class="ml-2 inline-block h-2 w-2 rounded-full bg-yellow-500 animate-pulse"></span>
+    </div>
+
+    <!-- Main Content Area: Sidebar and Main Panels -->
+    <main class="flex-grow flex max-w-7xl mx-auto w-full">
+        
+        <!-- Left Sidebar (Thinner) -->
+        <div class="w-56 bg-white border-r border-gray-200 p-4 flex flex-col space-y-4 shadow-md">
+            <h3 class="text-xs font-semibold uppercase tracking-wider text-gray-500">Navigation</h3>
+            <div class="space-y-1.5">
+                <!-- New Primary Links -->
+                <a href="#" class="block p-2 text-sm text-gray-700 rounded-md bg-blue-50 hover:bg-gray-100 font-medium text-blue-600">Dashboard</a>
+                <a href="#" class="block p-2 text-sm text-gray-700 rounded-md hover:bg-gray-100">Projects</a>
+                <a href="#" class="block p-2 text-sm text-gray-700 rounded-md hover:bg-gray-100">AI CHAT</a>
+                <a href="#" class="block p-2 text-sm text-gray-700 rounded-md hover:bg-gray-100">Scorecards</a>
+            </div>
+
+            <hr class="border-gray-200">
+
+            <h3 class="text-xs font-semibold uppercase tracking-wider text-gray-500">Quick Access</h3>
+            <div class="space-y-1"> <!-- Shrinking the size of quick access content -->
+                <a href="#" class="flex items-center p-2 text-xs text-gray-700 rounded-md hover:bg-gray-100 transition duration-150">
+                    <!-- Icon: Upload Cloud -->
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4 mr-3 text-blue-500"><path d="M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.35M12 18v3M8 17l4 4 4-4"/></svg>
+                    Upload ERP Data
+                </a>
+                <a href="#" class="flex items-center p-2 text-xs text-gray-700 rounded-md hover:bg-gray-100 transition duration-150">
+                    <!-- Icon: Mobile -->
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4 mr-3 text-blue-500"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><path d="M12 18h.01"/></svg>
+                    Mobile Sync
+                </a>
+                <a href="#" class="flex items-center p-2 text-xs text-gray-700 rounded-md hover:bg-gray-100 transition duration-150">
+                    <!-- Icon: Settings -->
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4 mr-3 text-blue-500"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.22a2 2 0 0 1-1.4 1.4L4.9 6.38a2 2 0 0 0-1.2 2v2.44a2 2 0 0 0 1.2 2l1.46 1.16a2 2 0 0 1 1.4 1.4v.22a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.22a2 2 0 0 1 1.4-1.4l1.46-1.16a2 2 0 0 0 1.2-2v-2.44a2 2 0 0 0-1.2-2l-1.46-1.16a2 2 0 0 1-1.4-1.4V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
+                    Settings
+                </a>
+            </div>
+
+            <hr class="border-gray-200">
+
+            <h3 class="text-xs font-semibold uppercase tracking-wider text-red-500">ADMIN SETTINGS</h3>
+            <div class="space-y-1.5">
+                <!-- Link updated to Compliance Reports -->
+                <a href="#" class="block p-2 text-sm text-gray-700 rounded-md hover:bg-gray-100">Compliance Reports</a>
+                <a href="#" class="block p-2 text-sm text-gray-700 rounded-md hover:bg-gray-100">Data Sources</a>
+                <a href="#" class="block p-2 text-sm text-gray-700 rounded-md hover:bg-gray-100">Insights</a>
+            </div>
+        </div>
+
+        <!-- Main Dashboard Panels (Grid Layout) -->
+        <div class="flex-grow p-6 space-y-3 overflow-y-auto"> <!-- Reduced vertical spacing -->
+            
+            <!-- Real-Time Snapshot (Top Cards - Tighter Grid) -->
+            <div class="grid grid-cols-3 gap-3">
+                
+                <!-- Card 1: Project -->
+                <div class="bg-white p-3 rounded-xl shadow-lg border-l-4 border-blue-500">
+                    <h4 class="text-xs font-semibold text-gray-500 flex justify-between items-center">
+                        Current Project
+                        <span class="text-blue-500" title="Project ID">#ALU-REC-007</span>
+                    </h4>
+                    <p class="mt-0.5 text-xl font-bold text-gray-800">Aluminium Recycling</p>
+                    <span class="text-xs text-gray-500 block">Site: Facility 3</span>
+                </div>
+
+                <!-- Card 2: CO₂ Emissions Saved -->
+                <div class="bg-white p-3 rounded-xl shadow-lg border-l-4 border-emerald-500">
+                    <h4 class="text-xs font-semibold text-gray-500 flex justify-between items-center">
+                        CO₂ Saved
+                        <span class="text-emerald-500" title="Compared to Linear Path">25% Reduction</span>
+                    </h4>
+                    <p class="mt-0.5 text-xl font-bold text-emerald-600">12.3 t avoided</p>
+                    <span class="text-xs text-gray-500 block">Status: Exceeding Goal</span>
+                </div>
+
+                <!-- Card 3: Circularity Index -->
+                <div class="bg-white p-3 rounded-xl shadow-lg border-l-4 border-emerald-500">
+                    <h4 class="text-xs font-semibold text-gray-500 flex justify-between items-center">
+                        Circularity Index
+                        <span class="text-yellow-600" title="Industry Average is 52%">+26% Delta</span>
+                    </h4>
+                    <p class="mt-0.5 text-xl font-bold text-emerald-600">78%</p>
+                    <span class="text-xs text-gray-500 block">Scorecard Metric</span>
+                </div>
+            </div>
+            
+            <!-- LCA Report Generator Button -->
+            <div class="bg-white p-2.5 rounded-xl shadow-lg border-l-4 border-red-500 flex justify-between items-center">
+                <p class="text-sm font-medium text-gray-800">
+                    Generate the latest, audited Compliance Report for Q3.
+                </p>
+                <button class="px-4 py-2 bg-red-600 text-white font-semibold text-sm rounded-lg hover:bg-red-700 transition duration-300 shadow-md shadow-red-300 flex items-center justify-center">
+                    <!-- Icon: File Text -->
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4 mr-2"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><line x1="10" y1="9" x2="8" y2="9"/></svg>
+                    Generate Report
+                </button>
+            </div>
+
+            <!-- AI Progress Bar -->
+            <div class="bg-violet-100 p-3 rounded-xl shadow-md border-l-4 border-violet-600">
+                <div class="flex justify-between items-center mb-1">
+                    <span class="text-xs font-semibold text-violet-800 flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4 mr-2 text-violet-600"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.76l.63-4.43c.12-.83-.58-1.51-1.31-1.51H14z"/><path d="M17 5V3"/></svg>
+                        Filling data gaps with AI........
+                    </span>
+                    <span class="text-xs font-bold text-violet-800">72%</span>
+                </div>
+                <div class="w-full bg-violet-300 rounded-full h-2.5">
+                    <div class="bg-violet-600 h-2.5 rounded-full" style="width: 72%"></div>
+                </div>
+            </div>
+
+            <!-- Process Flow (Sankey, Hotspot, AI/ML) vs Comparison Metrics (75% / 25% Split) -->
+            <div class="grid grid-cols-1 lg:grid-cols-4 gap-4">
+
+                <!-- 75% Column: Process Flow & Data Insights (lg:col-span-3) -->
+                <div class="lg:col-span-3 space-y-4">
+                    <!-- Top Section of 75%: Sankey/Flow, Hotspots, and NEW Smart Generation Comparison -->
+                    <div class="bg-white p-5 rounded-xl shadow-lg">
+                        <h3 class="text-base font-bold text-gray-800 mb-3 flex items-center justify-between">
+                            <span class="text-xl">Sankey Flow & Hotspot Mapping</span>
+                            <span class="bg-blue-100 text-blue-600 px-2 py-0.5 text-xs font-semibold rounded-full flex items-center" title="Hotspots are highest impact steps">
+                                <span class="h-2 w-2 rounded-full bg-emerald-500 mr-1.5"></span> <!-- Green Dot Added -->
+                                Live LCA Simulation
+                            </span>
+                        </h3>
+                        <p class="text-xs text-gray-500 mb-4">Visualizing material and energy flow for Circular vs Linear path.</p>
+                        
+                        <!-- NEW: Two-column layout for Hotspot (left) and Smart Generation (right) -->
+                        <div class="grid grid-cols-2 gap-6">
+                            
+                            <!-- Column 1: Hotspot Grid (Shrunk) -->
+                            <div>
+                                <p class="text-sm font-semibold text-gray-700 mb-2">GHG Emissions Hotspot (By Process Step - 3M)</p>
+                                
+                                <!-- Hotspot Process Labels (Horizontal) - Simplified to 4 main steps -->
+                                <div class="grid grid-cols-12 gap-2 ml-1">
+                                    <div class="col-span-3 text-xs text-gray-500 font-medium text-center">Raw Mat.</div>
+                                    <div class="col-span-3 text-xs text-gray-500 font-medium text-center">Process</div>
+                                    <div class="col-span-3 text-xs text-gray-500 font-medium text-center">Transport</div>
+                                    <div class="col-span-3 text-xs text-gray-500 font-medium text-center">EOL</div>
+                                </div>
+                                
+                                <!-- Hotspot Grid -->
+                                <div class="hotspot-grid ml-4">
+                                    <!-- Row 1 (Recent Month) - Using col-span-3 for 4 main blocks -->
+                                    <div class="hotspot-cell bg-emerald-400 col-span-3" title="Month 3: Low Impact"></div>
+                                    <div class="hotspot-cell bg-red-600 col-span-3" title="Month 3: HIGH Processing Impact"></div>
+                                    <div class="hotspot-cell bg-red-700 col-span-3" title="Month 3: CRITICAL Transport Impact"></div>
+                                    <div class="hotspot-cell bg-emerald-500 col-span-3" title="Month 3: Low EOL Impact"></div>
+                                    
+                                    <!-- Row 2 -->
+                                    <div class="hotspot-cell bg-emerald-500 col-span-3"></div>
+                                    <div class="hotspot-cell bg-red-500 col-span-3"></div>
+                                    <div class="hotspot-cell bg-red-600 col-span-3"></div>
+                                    <div class="hotspot-cell bg-emerald-600 col-span-3"></div>
+                                    
+                                    <!-- Row 3 (Oldest Month) -->
+                                    <div class="hotspot-cell bg-emerald-600 col-span-3"></div>
+                                    <div class="hotspot-cell bg-red-400 col-span-3"></div>
+                                    <div class="hotspot-cell bg-red-500 col-span-3"></div>
+                                    <div class="hotspot-cell bg-emerald-700 col-span-3"></div>
+                                </div>
+                                
+                                <p class="text-xs text-gray-400 mt-1">Darker colors = Higher Impact. Rows represent time (top=recent).</p>
+                            </div>
+
+                            <!-- Column 2: Smart Generation Comparison Chart -->
+                            <div>
+                                <h4 class="text-sm font-semibold text-gray-800 mb-3 flex items-center">
+                                    <!-- Sparkle Icon -->
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4 mr-2 text-violet-600"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.76l.63-4.43c.12-.83-.58-1.51-1.31-1.51H14z"/><path d="M17 5V3"/></svg>
+                                    Smart Generation Savings
+                                </h4>
+
+                                <!-- Comparison Metric Card -->
+                                <div class="bg-blue-50 p-3 rounded-lg border-l-4 border-blue-500 mb-4">
+                                    <p class="text-xs font-medium text-gray-600">Total Emissions Avoided by Circularity</p>
+                                    <p class="text-2xl font-extrabold text-blue-700 mt-1">50 tonnes CO2! </p>
+                                    <p class="text-xs text-gray-500 mt-1">Savings over the last quarter.</p>
+                                </div>
+                                
+                                <!-- Comparison Bar Chart (Linear vs Circular Impact) -->
+                                <p class="text-sm font-medium text-gray-700 mb-1">Resource Footprint Reduction</p>
+                                
+                                <div class="space-y-3">
+                                    <!-- Energy Reduction -->
+                                    <div>
+                                        <span class="text-xs text-gray-500">Energy (MWh)</span>
+                                        <div class="h-4 w-full bg-gray-200 rounded-lg relative overflow-hidden">
+                                            <div class="absolute inset-y-0 left-0 bg-yellow-500 w-[70%]" title="Linear Energy: 70% of potential"></div>
+                                            <div class="absolute inset-y-0 left-0 bg-emerald-500 w-[20%]" title="Circular Energy: 20% of potential"></div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Water Reduction -->
+                                    <div>
+                                        <span class="text-xs text-gray-500">Water ($\text{m}^3$)</span>
+                                        <div class="h-4 w-full bg-gray-200 rounded-lg relative overflow-hidden">
+                                            <div class="absolute inset-y-0 left-0 bg-yellow-500 w-[95%]" title="Linear Water: 95% of potential"></div>
+                                            <div class="absolute inset-y-0 left-0 bg-emerald-500 w-[45%]" title="Circular Water: 45% of potential"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                 <p class="text-xs text-gray-400 mt-2">Yellow = Linear Path Footprint, Green = Circular Path Footprint</p>
+                            </div>
+
+                        </div>
+                        <!-- END NEW: Two-column layout -->
+                        
+                        <!-- Simplified Flow Diagram (Linear vs Circular) - Remains below the new grid -->
+                        <div class="space-y-3 pt-3 mt-4 border-t border-gray-100">
+                             <h4 class="text-sm font-semibold text-gray-700">Process Comparison: Linear vs Circular</h4>
+                            <div class="flex items-center space-x-4">
+                                <span class="px-2 py-0.5 text-xs font-semibold text-red-700 bg-red-100 rounded-full">LINEAR</span>
+                                <div class="h-1.5 w-1/3 bg-red-500 rounded-full"></div>
+                                <span class="text-xs text-red-500">Raw Mat.</span>
+                                <div class="h-1.5 w-1/3 bg-red-500 rounded-full"></div>
+                                <span class="text-xs text-red-700 font-bold">Waste EOL</span>
+                            </div>
+                            <div class="flex items-center space-x-4">
+                                <span class="px-2 py-0.5 text-xs font-semibold text-emerald-700 bg-emerald-100 rounded-full">CIRCULAR</span>
+                                <div class="h-1.5 w-1/3 bg-emerald-500 rounded-full"></div>
+                                <span class="text-xs text-emerald-500">Scrap Input</span>
+                                <div class="h-1.5 w-1/3 bg-emerald-500 rounded-full"></div>
+                                <span class="text-xs text-emerald-700 font-bold">Recycled EOL</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- AI/ML Estimation (Data Gaps) - Remains in 75% column -->
+                    <div class="bg-white p-5 rounded-xl shadow-lg border-l-4 border-blue-500">
+                        <h3 class="text-base font-bold text-gray-800 mb-1">AI/ML Data Gap Filling</h3>
+                        <p class="text-xs text-gray-500 mb-3 italic">“No more slow manual inputs — XIRA uses **AI to predict missing parameters**.”</p>
+                        
+                        <div class="space-y-2">
+                            <!-- Mock Input 1: Missing Data Field -->
+                            <div>
+                                <label class="text-xs font-medium text-gray-700">Missing: Transport Distance</label>
+                                <div class="mt-0.5 flex rounded-md shadow-sm">
+                                    <input type="text" value="320 km" disabled class="flex-1 block w-full rounded-l-md border-gray-300 p-1.5 bg-gray-50 text-gray-800 text-sm">
+                                    <span class="inline-flex items-center px-2 rounded-r-md border border-l-0 border-emerald-500 bg-emerald-100 text-xs text-emerald-700 font-semibold">
+                                        AI Suggestion ✅
+                                    </span>
+                                </div>
+                            </div>
+                            
+                            <!-- Mock Input 2: Missing Data Field -->
+                            <div>
+                                <label class="text-xs font-medium text-gray-700">Missing: Energy Intensity</label>
+                                <div class="mt-0.5 flex rounded-md shadow-sm">
+                                    <input type="text" value="1.8 kWh/kg" disabled class="flex-1 block w-full rounded-l-md border-gray-300 p-1.5 bg-gray-50 text-gray-800 text-sm">
+                                    <span class="inline-flex items-center px-2 rounded-r-md border border-l-0 border-blue-500 bg-blue-100 text-xs text-blue-700 font-semibold">
+                                        Model Estimate
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <!-- 25% Column: Comparison Metrics & Status (lg:col-span-1) -->
+                <div class="lg:col-span-1 space-y-4">
+                    <!-- Comparison Metrics Panel (Contains Pie Chart) -->
+                    <div class="bg-white p-4 rounded-xl shadow-lg">
+                        <h3 class="text-base font-bold text-gray-800 mb-3">Key Metrics: Comparison</h3>
+                        
+                        <!-- Pie Chart Mock: Circularity Index -->
+                        <div class="flex flex-col items-center justify-center mb-4 border-b pb-4 border-gray-100">
+                            <div class="relative flex justify-center items-center">
+                                <div class="pie-chart-mock"></div>
+                                <div class="absolute text-lg font-bold text-emerald-600 transform rotate-90">78%</div>
+                            </div>
+                            <p class="text-sm font-medium text-gray-700 mt-2">Circularity Index</p>
+                            <p class="text-xs text-gray-500">Goal: 85%</p>
+                        </div>
+
+                        <!-- Bar Chart Mock: Emissions -->
+                        <div class="mb-4">
+                            <p class="text-sm font-medium text-gray-700 mb-1">Emissions!</p>
+                            <!-- Linear -->
+                            <div class="h-4 w-full bg-red-200 rounded-lg relative mb-1 overflow-hidden">
+                                <div class="absolute inset-y-0 left-0 bg-red-500 w-[80%]" title="Linear Path: 80 t"></div>
+                                <span class="absolute right-0 top-0 bottom-0 text-xs font-semibold flex items-center pr-1 text-red-900">80 t</span>
+                            </div>
+                            <!-- Circular -->
+                            <div class="h-4 w-full bg-emerald-200 rounded-lg relative overflow-hidden">
+                                <div class="absolute inset-y-0 left-0 bg-emerald-500 w-[30%]" title="Circular Path: 30 t"></div>
+                                <span class="absolute right-0 top-0 bottom-0 text-xs font-semibold flex items-center pr-1 text-emerald-900">30 t</span>
+                            </div>
+                            <p class="text-xs text-gray-500 mt-1">Linear vs Circular</p>
+                        </div>
+
+                        <!-- Trend Forecast (Less Prominent) -->
+                        <div class="bg-gray-50 p-3 rounded-lg border-l-2 border-blue-400">
+                            <p class="text-xs text-gray-600">
+                                **Forecast (Water):** Switch to rainwater.
+                            </p>
+                            <p class="text-sm font-bold text-blue-600 mt-0.5 flex items-center">
+                                -15% Water Usage
+                                <span class="ml-1 px-1.5 py-0 bg-blue-100 text-blue-700 text-xs font-semibold rounded-full">SPARKLE AI</span>
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Live Sync Status -->
+                    <div class="bg-white p-4 rounded-xl shadow-lg">
+                        <h3 class="text-base font-bold text-gray-800 mb-2">Real-Time Sync Status</h3>
+                        <ul class="space-y-1 text-sm">
+                            <li class="flex items-center text-gray-700 text-xs">
+                                <span class="text-emerald-500 font-bold mr-2">●</span>
+                                Mobile App: **1200kg scrap added** (1m ago).
+                            </li>
+                            <li class="flex items-center text-gray-700 text-xs">
+                                <span class="text-emerald-500 font-bold mr-2">●</span>
+                                ERP Integration: **Connected** (5 min ago).
+                            </li>
+                            <li class="flex items-center text-gray-700 text-xs">
+                                <span class="text-yellow-500 font-bold mr-2">●</span>
+                                IoT Sensor Feed: **Pending** on Water Meter 4.
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- AI Assistant Bot (Explainable AI) - Floating Icon -->
+    <button class="ai-float-button fixed bottom-6 right-6 p-4 bg-blue-600 text-white rounded-full shadow-xl hover:bg-blue-700 z-50 transition duration-300 ease-in-out">
+        <!-- Icon: Message Circle/Bot -->
+        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-message-square">
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+            <!-- Mock bot/AI brain icon inside the bubble -->
+            <path d="M10 9a2 2 0 1 0 0 4 2 2 0 0 0 0-4z" fill="white" stroke="none" transform="translate(2, 2)"></path>
+            <path d="M16 9a2 2 0 1 0 0 4 2 2 0 0 0 0-4z" fill="white" stroke="none" transform="translate(-2, 2)"></path>
+        </svg>
+        <span class="sr-only">AI Assistant Bot</span>
+        <div class="absolute -top-1 -right-1 w-4 h-4 bg-emerald-400 rounded-full border-2 border-white animate-ping"></div>
+        <div class="absolute -top-1 -right-1 w-4 h-4 bg-emerald-500 rounded-full border-2 border-white"></div>
+    </button>
+</body>
+</html>
